@@ -1,0 +1,38 @@
+name: Running Engine
+
+on:
+  schedule:
+    - cron: '*/7 * * * *'  # Runs every 7 minutes
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create file and commit
+      run: |
+        FILE="commit_number.md"
+
+        # Check if the file exists, otherwise create it
+        if [ ! -f "$FILE" ]; then
+          echo "Keep off, construction ongoing" > "$FILE"
+          echo "commit number: 1" >> "$FILE"
+        else
+          CURRENT_COUNT=$(grep -oP 'commit number: \K\d+' "$FILE" || echo 0)
+          NEXT_COUNT=$((CURRENT_COUNT + 1))
+          sed -i "/commit number: /c\commit number: $NEXT_COUNT" "$FILE"
+        fi
+
+        # Configure Git
+        git config --global user.name "ogieriakhi17"
+        git config --global user.email "osazeogieriakhi@gmail.com"
+
+        # Commit and push changes
+        git add "$FILE"
+        git commit -m "Automated commit: updated commit count to $NEXT_COUNT"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
