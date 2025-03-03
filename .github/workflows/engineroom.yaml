@@ -11,6 +11,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        persist-credentials: false  # Prevent conflicts with authentication
 
     - name: Create file and commit
       run: |
@@ -27,12 +29,12 @@ jobs:
         fi
 
         # Configure Git
-        git config --global user.name "ogieriakhi17"
-        git config --global user.email "osazeogieriakhi@gmail.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
         # Commit and push changes
         git add "$FILE"
         git commit -m "Automated commit: updated commit count to $NEXT_COUNT"
-        git push origin main
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/Ogieriakhi17/TheBackRoom.git
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
