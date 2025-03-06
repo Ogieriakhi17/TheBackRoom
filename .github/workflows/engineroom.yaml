@@ -2,7 +2,7 @@ name: Running Engine
 
 on:
   schedule:
-    - cron: '*/7 * * * *'  # Runs every 7 minutes
+    - cron: '0 0,12 * * *'  # Runs every 7 minutes
 
 jobs:
   commit:
